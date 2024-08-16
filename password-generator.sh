@@ -21,15 +21,20 @@ UPPERCASE="A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z"
 DIGITS="0|1|2|3|4|5|6|7|8|9"
 SYMBOLS="!|@|#|'$'|%|'^'|&|'*'|(|)|-|_|=|'+'|'['|']'|'{'|'}'|\||;|:|,|'.'|<|>|'?'|/|~"
 QUAIS="$LOWERCASE"
-
-while getopts "hudsl:" opt ; do
+SAVED=false
+SAVE=false
+while getopts "hudsl:n:o" opt ; do
 	case "$opt" in
 		h) show_help ; exit ;;
 		u) USE_UPPERCASE=true ;;
 		d) USE_DIGITS=true ;;
 		s) USE_SYMBOLS=true ;;
-		l) LENGTH=$2 ;;
+		l) LENGTH="$OPTARG" ;;
+		n) SAVED=true ; SAVENOME="$OPTARG" ;;
+		o) SAVE=true ;;	
 
+		
+		
 	esac
 done
 
@@ -51,6 +56,23 @@ fi
 PASSWORD=$(cat /dev/urandom | grep -aEo "$QUAIS" | head -c $((LENGTH*2)) | sed ':a;N;$!ba;s/\n//g') 
 
 echo "Senha gerada: $PASSWORD"
+
+if $SAVED ;
+then
+	echo "$SAVENOME: $PASSWORD" >> passwords.txt
+elif $SAVE ;
+then 
+	echo $PASSWORD >> passwords.txt ; echo "Senhas salva em passwords.txt"
+fi
+
+
+
+	
+
+
+
+
+
 
 # Opcional: salvar a senha em um arquivo criptografado
 # Implemente como essa senha será criptografada com o openssl
