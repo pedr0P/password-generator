@@ -20,8 +20,7 @@ LOWERCASE="a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z"
 UPPERCASE="A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z"
 DIGITS="0|1|2|3|4|5|6|7|8|9"
 SYMBOLS="!|@|#|'$'|%|'^'|&|'*'|(|)|-|_|=|'+'|'['|']'|'{'|'}'|\||;|:|,|'.'|<|>|'?'|/|~"
-QUAIS=""
-# grep -aEo "a|b|c|d|e|f" txt.txt
+QUAIS="$LOWERCASE"
 
 while getopts "hudsl:" opt ; do
 	case "$opt" in
@@ -37,8 +36,6 @@ done
 if $USE_UPPERCASE ;
 then
 	QUAIS+=$UPPERCASE
-else
-	QUAIS+=$LOWERCASE
 fi
 
 if $USE_DIGITS ;
@@ -51,23 +48,9 @@ then
 	QUAIS+="|"$SYMBOLS
 fi
 
-head -c 1000 /dev/urandom | grep -aEo -s "$QUAIS" | sed ':a;N;$!ba;s/\n//g' | head -c $LENGTH 
+PASSWORD=$(cat /dev/urandom | grep -aEo "$QUAIS" | head -c $((LENGTH*2)) | sed ':a;N;$!ba;s/\n//g') 
 
-# head -c
-
-# Definir conjuntos de caracteres
- 
-
-# Construir a lista de caracteres permitidos
-# { Implementação vem aqui }
-
-# Gerar a senha:
-# o /dev/urandom gera bytes aleatórios, para conseguir
-# uma senha precisamos limpar esses bytes de alguma forma
-# PASSWORD=$(cat /dev/urandom)
-
-# Exibir a senha gerada
-# echo "Senha gerada: $PASSWORD"
+echo "Senha gerada: $PASSWORD"
 
 # Opcional: salvar a senha em um arquivo criptografado
 # Implemente como essa senha será criptografada com o openssl
